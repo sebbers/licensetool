@@ -12,13 +12,11 @@ import "./App.css";
 import AuthService from "./services/auth.service";
 
 import Login from "./components/Login";
-import Register from "./components/Register";
 import Home from "./components/Home";
 import Profile from "./components/Profile";
 import Products from "./components/Products";
-import BoardUser from "./components/BoardUser";
-import BoardModerator from "./components/BoardModerator";
-import BoardAdmin from "./components/BoardAdmin";
+
+import Create from "./components/Create";
 
 const App = () => {
   const [showModeratorBoard, setShowModeratorBoard] = useState(false);
@@ -54,29 +52,20 @@ const App = () => {
               </Link>
             </li>
 
-            {/* {showModeratorBoard && (
-              <li className="nav-item">
-                <Link to={"/mod"} className="nav-link">
-                  Moderator Board
-                </Link>
-              </li>
-            )} */}
-
             {showAdminBoard && (
-              <li className="nav-item">
-                <Link to={"/products"} className="nav-link">
-                  Products
-                </Link>
-              </li>
+              <>
+                <li className="nav-item">
+                  <Link to={"/create"} className="nav-link">
+                    Create
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link to={"/manage"} className="nav-link">
+                    Manage
+                  </Link>
+                </li>
+              </>
             )}
-
-            {/* {currentUser && (
-              <li className="nav-item">
-                <Link to={"/user"} className="nav-link">
-                  User
-                </Link>
-              </li>
-            )} */}
           </div>
 
           {currentUser ? (
@@ -99,29 +88,17 @@ const App = () => {
                   Login
                 </Link>
               </li>
-
-              {/* <li className="nav-item">
-                <Link to={"/register"} className="nav-link">
-                  Sign Up
-                </Link>
-              </li> */}
             </div>
           )}
         </nav>
 
         <div className="container mt-3">
           <Switch>
-            <Route exact path={["/", "/home"]} component={Home} />} />
+            <Route exact path={["/", "/home"]} component={Home} />
             <Route exact path="/login" component={Login} />
-            {/* <Route exact path="/register" component={Register} /> */}
             <Route exact path="/profile" component={Profile} />
-            {/* <Route path="/user" component={BoardUser} />
-            <Route path="/mod" component={BoardModerator} />
-            <Route path="/admin" component={BoardAdmin} /> */}
-
-
-
             <Route exact path="/products" component={Products} />
+            <Route exact path="/create" component={Create} />
           </Switch>
         </div>
       </div>
