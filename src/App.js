@@ -13,13 +13,12 @@ import AuthService from "./services/auth.service";
 
 import Login from "./components/Login";
 import Home from "./components/Home";
-import Profile from "./components/Profile";
-import Products from "./components/Products";
-
 import Create from "./components/Create";
+import Manage from "./components/Manage";
+import SerialDetail from "./components/SerialDetail";
 
 const App = () => {
-  const [showModeratorBoard, setShowModeratorBoard] = useState(false);
+  // const [showModeratorBoard, setShowModeratorBoard] = useState(false);
   const [showAdminBoard, setShowAdminBoard] = useState(false);
   const [currentUser, setCurrentUser] = useState(undefined);
 
@@ -70,11 +69,11 @@ const App = () => {
 
           {currentUser ? (
             <div className="navbar-nav ml-auto">
-              <li className="nav-item">
+              {/* <li className="nav-item">
                 <Link to={"/profile"} className="nav-link">
                   {currentUser.username}
                 </Link>
-              </li>
+              </li> */}
               <li className="nav-item">
                 <a href="/login" className="nav-link" onClick={logOut}>
                   LogOut
@@ -96,9 +95,11 @@ const App = () => {
           <Switch>
             <Route exact path={["/", "/home"]} component={Home} />
             <Route exact path="/login" component={Login} />
-            <Route exact path="/profile" component={Profile} />
-            <Route exact path="/products" component={Products} />
+            {/* <Route exact path="/profile" component={Profile} />
+            <Route exact path="/products" component={Products} /> */}
             <Route exact path="/create" component={Create} />
+            <Route exact path="/manage" component={Manage} />
+            <Route exact path="/serials/:id" component={SerialDetail} />
           </Switch>
         </div>
       </div>
