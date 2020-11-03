@@ -35,17 +35,6 @@ const getCurrentUser = () => {
 };
 
 
-const refresh = () => {
-  const user = JSON.parse(localStorage.getItem("user"))
-  // const { refresh } = user;
-  
-  return axios.get(API_URL + 'refresh', { headers: { 'Authorization': 'Bearer ' + user.refresh } });
-
-
-  // return JSON.parse(localStorage.getItem("user"));
-};
-
-
 export default {
 //   register,
   login,
