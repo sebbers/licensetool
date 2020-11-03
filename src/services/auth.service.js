@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "../utils/axios";
 
 const API_URL = "https://license-test.digitalanarchy.com/api/v1/admin/";
 
@@ -33,6 +33,18 @@ const logout = () => {
 const getCurrentUser = () => {
   return JSON.parse(localStorage.getItem("user"));
 };
+
+
+const refresh = () => {
+  const user = JSON.parse(localStorage.getItem("user"))
+  // const { refresh } = user;
+  
+  return axios.get(API_URL + 'refresh', { headers: { 'Authorization': 'Bearer ' + user.refresh } });
+
+
+  // return JSON.parse(localStorage.getItem("user"));
+};
+
 
 export default {
 //   register,
