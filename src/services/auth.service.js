@@ -1,14 +1,8 @@
 import axios from "../utils/axios";
+import LocalStorage from './localStorage';
 
 const API_URL = "https://license-test.digitalanarchy.com/api/v1/admin/";
 
-// const register = (username, email, password) => {
-//   return axios.post(API_URL + "signup", {
-//     email,
-//     username,
-//     password,
-//   });
-// };
 
 const login = (username, password) => {
   return axios
@@ -18,8 +12,9 @@ const login = (username, password) => {
         password,
     })
     .then((response) => {
-      if (response.data.token) {
-        localStorage.setItem("user", JSON.stringify(response.data));
+      if (response.data) {
+        LocalStorage.setToken(response.data)
+        LocalStorage.setUser({ username })
       }
 
       return response.data;
@@ -27,17 +22,17 @@ const login = (username, password) => {
 };
 
 const logout = () => {
-  localStorage.removeItem("user");
+  LocalStorage.clearToken();
+  LocalStorage.clearUser();
 };
 
 const getCurrentUser = () => {
-  return JSON.parse(localStorage.getItem("user"));
+  return LocalStorage.getUser();
 };
 
 
 export default {
-//   register,
   login,
   logout,
-  getCurrentUser,
+  getCurrentUser
 };
