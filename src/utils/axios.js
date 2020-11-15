@@ -10,6 +10,7 @@ instance.interceptors.request.use(
         return config;
     },
     error => {
+        console.log(error);
         Promise.reject(error);
     }
 );
@@ -21,20 +22,15 @@ instance.interceptors.response.use(
     },
     error => {
         const { config: originalRequest } = error;
-        console.log(`originalRequest.url: ${originalRequest.url}`)
         if (error.response.status === 401 && originalRequest.url.endsWith('v1/admin')) {
             history.push('/login');
             return Promise.reject(error);
         }
 
         if (error.response.status === 401 && !originalRequest._retry) {
-            // const user = JSON.parse(localStorage.getItem('user'));
-            // const { refresh } = user || '';
-            // axios.defaults.headers.common['Authorization'] = `Bearer ${refresh}`;
-            // return instance(originalReq  uest);
             originalRequest._retry = true;
             const refreshToken = LocalStorage.getRefreshToken();
-            return axios.get('/api/v1/admin/',
+            return axios.get('https://license-test.digitalanarchy.com/api/v1/admin/refresh',
                 {
                     headers: {
                       'Authorization': `Bearer ${refreshToken}`
@@ -42,18 +38,11 @@ instance.interceptors.response.use(
                 })
                 .then(response => {
                     if (response.data) {
-                        // localStorage.setItem("user", JSON.stringify(response.data));
                         LocalStorage.setToken(response.data);
                         instance.defaults.headers.common['Authorization'] = `Bearer ${LocalStorage.getAccessToken()}`;
-                        // return response.data.token;
                         return instance(originalRequest);
                       }
 
-                    // if (res.status === 201) {
-                    //     localStorageService.setToken(res.data);
-                    //     axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorageService.getAccessToken();
-                    //     return axios(originalRequest);
-                    // }
                 })
         }
         return Promise.reject(error);
