@@ -18,6 +18,7 @@ const createSerial = ({...data}) => {
       "product": data.product,
       "email": data.email,
       "comment": data.comments,
+      "expiration": data.formatedDate,
       "version": "4.0",
       "activations": [
         {

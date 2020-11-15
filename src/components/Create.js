@@ -79,6 +79,9 @@ const Create = (props) => {
   const [email, setEmail] = useState("");
   const [mac, setMac] = useState("");
   const [comments, setComments] = useState("");
+  
+  
+  const [productName, setProductName] = useState("");
 
   useEffect(() => {    
     ProductService.getProducts().then(
@@ -139,11 +142,17 @@ const Create = (props) => {
 
     form.current.validateAll();
 
+    const formatedDate = expireDate.toJSON()
+
     if (checkBtn.current.context._errors.length === 0) {
-      SerialService.createSerial({product, email, mac, comments}).then(
+      SerialService.createSerial({product, email, formatedDate, mac, comments}).then(
         (response) => {
-          setMessage(response.data.message);
+          setMessage(response.data.email);
           setSuccessful(true);
+
+          console.log(response)
+          console.log(response.data.product)
+          setProductName(response.data.product)
         },
         (error) => {
           const resMessage =
@@ -169,8 +178,9 @@ const Create = (props) => {
       <div className="card card-container">
       {successful && (
         <div className="">
-          Youve created a serial be proud?
-          <button onClick={createNewButton} className="btn btn-primary btn-block">Create another serial</button>
+          <h2 className="text-center">You created a license for:</h2>
+          <p className="lead">{productName}</p>
+          <button onClick={createNewButton} className="btn btn-primary btn-block">Create another license</button>
         </div>
       )}
       {!successful && (
@@ -203,7 +213,7 @@ const Create = (props) => {
 
               <div className="form-group">
                 <label htmlFor="email">Expiration Date</label>
-                <DatePicker selected={expireDate} onChange={date => setExpireDate(date)} />
+                <DatePicker selected={expireDate} onSelect={date => console.log(date.toJSON())} onChange={date => setExpireDate(date)} dateFormat="yyyy/MM/dd" />
               </div>
 
               <div className="form-group">
