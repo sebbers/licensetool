@@ -7,6 +7,7 @@ import CheckButton from "react-validation/build/button";
 import { isEmail } from "validator";
 
 import AuthService from "../services/auth.service";
+import SerialService from "../services/serial.service";
 import ProductService from "../services/product.service";
 
 import DatePicker from "react-datepicker";
@@ -64,10 +65,10 @@ const vpassword = (value) => {
 
 const Create = (props) => {
   const form = useRef();
-  // const checkBtn = useRef();
+  const checkBtn = useRef();
 
   const [successful, setSuccessful] = useState(false);
-  // const [message, setMessage] = useState("");
+  const [message, setMessage] = useState("");
 
   const [products, setProducts] = useState([]);
   const [product, setProduct] = useState("");
@@ -130,40 +131,50 @@ const Create = (props) => {
     setComments(comments);
   };
 
-  // const handleRegister = (e) => {
-  //   e.preventDefault();
+  const handleSubmit = (e) => {
+    e.preventDefault();
 
-  //   setMessage("");
-  //   setSuccessful(false);
+    setMessage("");
+    setSuccessful(false);
 
-  //   form.current.validateAll();
+    form.current.validateAll();
 
-  //   if (checkBtn.current.context._errors.length === 0) {
-  //     AuthService.register(username, email, password).then(
-  //       (response) => {
-  //         setMessage(response.data.message);
-  //         setSuccessful(true);
-  //       },
-  //       (error) => {
-  //         const resMessage =
-  //           (error.response &&
-  //             error.response.data &&
-  //             error.response.data.message) ||
-  //           error.message ||
-  //           error.toString();
+    if (checkBtn.current.context._errors.length === 0) {
+      SerialService.createSerial({product, email, mac, comments}).then(
+        (response) => {
+          setMessage(response.data.message);
+          setSuccessful(true);
+        },
+        (error) => {
+          const resMessage =
+            (error.response &&
+              error.response.data &&
+              error.response.data.message) ||
+            error.message ||
+            error.toString();
 
-  //         setMessage(resMessage);
-  //         setSuccessful(false);
-  //       }
-  //     );
-  //   }
-  // };
+          setMessage(resMessage);
+          setSuccessful(false);
+        }
+      );
+    }
+  };
+
+  const createNewButton = () => {
+    setSuccessful(!successful)
+  }
 
   return (
     <div className="col-md-12">
-      <div className="card card-container">        
-        <Form onSubmit={()=>{}} ref={form}>
-          {!successful && (
+      <div className="card card-container">
+      {successful && (
+        <div className="">
+          Youve created a serial be proud?
+          <button onClick={createNewButton} className="btn btn-primary btn-block">Create another serial</button>
+        </div>
+      )}
+      {!successful && (
+        <Form onSubmit={handleSubmit} ref={form}>
             <div>
               <div className="form-group">
                 <label htmlFor="product">Product</label>
@@ -174,7 +185,7 @@ const Create = (props) => {
                   validations={[required]}
                 >
                   <option value=''>Select a product</option>
-                  {products && products.map((product, index) => <option value={product.serialProduct}>{product.serialPrefix}</option>)}
+                  {products && products.map((product, index) => <option value={product.name}>{product.serialPrefix}</option>)}
                 </Select>
               </div>
 
@@ -258,9 +269,8 @@ const Create = (props) => {
                 <button className="btn btn-primary btn-block">Create</button>
               </div>
             </div>
-          )}
 
-          {/* {message && (
+          {message && (
             <div className="form-group">
               <div
                 className={ successful ? "alert alert-success" : "alert alert-danger" }
@@ -269,9 +279,10 @@ const Create = (props) => {
                 {message}
               </div>
             </div>
-          )} */}
-          {/* <CheckButton style={{ display: "none" }} ref={checkBtn} /> */}
+          )}
+          <CheckButton style={{ display: "none" }} ref={checkBtn} />
         </Form>
+        )}
       </div>
     </div>
   );

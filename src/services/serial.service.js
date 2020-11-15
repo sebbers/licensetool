@@ -12,7 +12,31 @@ const getSerial = (serial) => {
   return axios.get(API_URL + `/${serial}`, { headers: authHeader() });
 };
 
+const createSerial = ({...data}) => {
+  return axios
+    .post(API_URL, {
+      "product": data.product,
+      "email": data.email,
+      "comment": data.comments,
+      "version": "4.0",
+      "activations": [
+        {
+          "mac": data.mac
+        }
+      ],
+      "deactivations": [
+        {
+          "mac": data.mac
+        }
+      ],
+    })
+    .then((response) => {
+      return response;
+    });
+};
+
 export default {
   getSerials,
-  getSerial
+  getSerial,
+  createSerial
 };

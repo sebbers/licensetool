@@ -20,12 +20,9 @@ instance.interceptors.response.use(
         return response;
     },
     error => {
-        debugger
         const { config: originalRequest } = error;
         console.log(`originalRequest.url: ${originalRequest.url}`)
-        debugger
         if (error.response.status === 401 && originalRequest.url.endsWith('v1/admin')) {
-            debugger
             history.push('/login');
             return Promise.reject(error);
         }
@@ -35,10 +32,8 @@ instance.interceptors.response.use(
             // const { refresh } = user || '';
             // axios.defaults.headers.common['Authorization'] = `Bearer ${refresh}`;
             // return instance(originalReq  uest);
-            debugger
             originalRequest._retry = true;
             const refreshToken = LocalStorage.getRefreshToken();
-            debugger
             return axios.get('/api/v1/admin/',
                 {
                     headers: {
@@ -46,14 +41,10 @@ instance.interceptors.response.use(
                     }
                 })
                 .then(response => {
-                    debugger
                     if (response.data) {
-                        debugger
                         // localStorage.setItem("user", JSON.stringify(response.data));
                         LocalStorage.setToken(response.data);
-                        debugger
                         instance.defaults.headers.common['Authorization'] = `Bearer ${LocalStorage.getAccessToken()}`;
-                        debugger
                         // return response.data.token;
                         return instance(originalRequest);
                       }
